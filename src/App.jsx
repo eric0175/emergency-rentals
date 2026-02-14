@@ -81,7 +81,7 @@ const EmergencyAssistanceForm = () => {
             </div>
             <div>
               <h2 className="font-bold text-xl tracking-wide">Secure Application</h2>
-              <p className="text-blue-200/80 text-sm">Form ID: ERA-2024-PX</p>
+              <p className="text-blue-200/80 text-sm">Form ID: ERA-2026-PX</p>
             </div>
           </div>
           <div className="hidden md:block text-right">
@@ -196,7 +196,7 @@ const EmergencyAssistanceForm = () => {
       </div>
       
       <footer className="mt-12 text-slate-400 text-xs flex flex-col items-center gap-2">
-        <p>&copy; 2024 Emergency Rental Assistance Program. Confidentiality Guaranteed.</p>
+        <p>&copy; 2026 Emergency Rental Assistance Program. Confidentiality Guaranteed.</p>
         <div className="flex gap-4 underline decoration-slate-200 underline-offset-4">
           <a href="#">Privacy Policy</a>
           <a href="#">Terms of Service</a>
