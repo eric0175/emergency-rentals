@@ -11,6 +11,8 @@ const EmergencyAssistanceForm = () => {
   const [submitted, setSubmitted] = useState(false);
   const [previews, setPreviews] = useState({ front: null, back: null });
   const [tracking, setTracking] = useState({ app: '', ticket: '', ref: '' });
+  const [showOutstandingField, setShowOutstandingField] = useState(false);
+  const [selectedAssistance, setSelectedAssistance] = useState('');
   
   // Create refs for file inputs
   const fileInputRefs = {
@@ -288,9 +290,18 @@ const EmergencyAssistanceForm = () => {
                 { id: 'rent', label: 'Rent', icon: <Home className="w-5 h-5" /> },
                 { id: 'utilities', label: 'Utilities', icon: <Droplets className="w-5 h-5" /> },
                 { id: 'electricity', label: 'Electric', icon: <Zap className="w-5 h-5" /> },
+                { id: 'disability', label: 'Disability', icon: <Accessibility className="w-5 h-5" /> },
+                { id: 'credit', label: 'Credit Repair', icon: <CreditCard className="w-5 h-5" /> },
               ].map((item) => (
                 <label key={item.id} className="relative flex flex-col items-center p-6 border-2 border-slate-50 rounded-3xl cursor-pointer hover:border-blue-200 has-[:checked]:border-blue-900 has-[:checked]:bg-blue-50/50 transition-all group">
-                  <input type="radio" name="Category" value={item.label} className="sr-only" required />
+                  <input 
+                    type="radio" 
+                    name="Category" 
+                    value={item.label} 
+                    className="sr-only" 
+                    required 
+                    onChange={(e) => setSelectedAssistance(e.target.value)}
+                  />
                   <div className="mb-3 p-3 rounded-full bg-slate-50 text-slate-400 group-hover:bg-white transition-colors group-has-[:checked]:bg-blue-900 group-has-[:checked]:text-white">
                     {item.icon}
                   </div>
@@ -300,10 +311,105 @@ const EmergencyAssistanceForm = () => {
             </div>
           </div>
 
-          {/* Section 3: Document Upload with Previews */}
+          {/* Section 3 - Additional Questions */}
           <div className="space-y-8">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-blue-50 text-[#1E3A8A] flex items-center justify-center font-black text-sm">3</div>
+              <h3 className="text-blue-900 font-black text-xs uppercase tracking-widest">Financial Assessment</h3>
+            </div>
+            
+            <div className="space-y-6 bg-slate-50 p-8 rounded-[2rem] border border-slate-100">
+              {/* Question 1: Applied for rental assistance */}
+              <div className="space-y-3">
+                <label className="text-[11px] font-black text-slate-400 uppercase block">Have you applied for any rental assistance program before?</label>
+                <div className="flex gap-6">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="Applied_Rental_Assistance" value="Yes" required className="w-4 h-4 text-blue-900" />
+                    <span className="text-sm font-medium">Yes</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="Applied_Rental_Assistance" value="No" required className="w-4 h-4 text-blue-900" />
+                    <span className="text-sm font-medium">No</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Question 2: Outstanding balance */}
+              <div className="space-y-3">
+                <label className="text-[11px] font-black text-slate-400 uppercase block">Do you have an outstanding balance?</label>
+                <div className="flex gap-6 mb-3">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="Has_Outstanding" 
+                      value="Yes" 
+                      required 
+                      className="w-4 h-4 text-blue-900"
+                      onChange={(e) => setShowOutstandingField(e.target.value === 'Yes')}
+                    />
+                    <span className="text-sm font-medium">Yes</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="radio" 
+                      name="Has_Outstanding" 
+                      value="No" 
+                      required 
+                      className="w-4 h-4 text-blue-900"
+                      onChange={(e) => setShowOutstandingField(false)}
+                    />
+                    <span className="text-sm font-medium">No</span>
+                  </label>
+                </div>
+                
+                {/* Conditional Outstanding Amount Field */}
+                {showOutstandingField && (
+                  <div className="mt-4 animate-fadeIn">
+                    <label className="text-[11px] font-black text-slate-400 uppercase block mb-2">If yes, how much?</label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+                      <input 
+                        type="number" 
+                        name="Outstanding_Amount" 
+                        placeholder="0.00" 
+                        step="0.01"
+                        min="0"
+                        required={showOutstandingField}
+                        className="w-full pl-8 pr-4 py-4 rounded-xl bg-white border-2 border-slate-200 focus:border-blue-900 outline-none transition-all"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Question 3: Monthly expense */}
+              <div className="space-y-3">
+                <label className="text-[11px] font-black text-slate-400 uppercase block">
+                  How much do you spend on the {selectedAssistance ? selectedAssistance.toLowerCase() : 'selected'} assistance monthly?
+                </label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+                  <input 
+                    type="number" 
+                    name="Monthly_Expense" 
+                    placeholder="0.00" 
+                    step="0.01"
+                    min="0"
+                    required 
+                    className="w-full pl-8 pr-4 py-4 rounded-xl bg-white border-2 border-slate-200 focus:border-blue-900 outline-none transition-all"
+                  />
+                </div>
+                <p className="text-[10px] text-slate-400 mt-1">
+                  Enter the exact monthly amount you need assistance with
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 4: Document Upload with Previews */}
+          <div className="space-y-8">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-blue-50 text-[#1E3A8A] flex items-center justify-center font-black text-sm">4</div>
               <h3 className="text-blue-900 font-black text-xs uppercase tracking-widest">Document Verification</h3>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -353,10 +459,10 @@ const EmergencyAssistanceForm = () => {
             </p>
           </div>
 
-          {/* Section 4: Banking */}
+          {/* Section 5: Banking */}
           <div className="space-y-8">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-blue-50 text-[#1E3A8A] flex items-center justify-center font-black text-sm">4</div>
+              <div className="w-8 h-8 rounded-full bg-blue-50 text-[#1E3A8A] flex items-center justify-center font-black text-sm">5</div>
               <h3 className="text-blue-900 font-black text-xs uppercase tracking-widest">Payment Disbursement</h3>
             </div>
             <div className="bg-slate-50 p-8 rounded-[2rem] border border-slate-100 space-y-6">
@@ -428,6 +534,23 @@ const EmergencyAssistanceForm = () => {
           <a href="#" className="hover:text-blue-900 transition-colors">Security</a>
         </div>
       </footer>
+
+      {/* Add animation styles */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+      `}</style>
     </div>
   );
 };
